@@ -81,6 +81,19 @@ class Twitter():
         return self.get(url, params)
 
     # Post, retrieve and engage with Tweets
+
+    def POST_favorites_create(self, id, include_entities=None):
+        url = "https://api.twitter.com/1.1/favorites/create.json"
+        params = {"id": id,
+                  "include_entities": include_entities}
+        return self.post(url, params)
+
+    def POST_favorites_destroy(self, id, include_entities=None):
+        url = "https://api.twitter.com/1.1/favorites/destroy.json"
+        params = {"id": id,
+                  "include_entities": include_entities}
+        return self.post(url, params)
+
     def POST_statuses_destroy(self, id, trim_user=None):
         url = f"https://api.twitter.com/1.1/statuses/destroy/{id}.json"
         params = {"id": id,
@@ -89,6 +102,12 @@ class Twitter():
 
     def POST_statuses_retweet(self, id, trim_user=None):
         url = f"https://api.twitter.com/1.1/statuses/retweet/{id}.json"
+        params = {"id": id,
+                  "trim_user": trim_user}
+        return self.post(url, params)
+
+    def POST_statuses_unretweet(self, id, trim_user=None):
+        url = f"https://api.twitter.com/1.1/statuses/unretweet/{id}.json"
         params = {"id": id,
                   "trim_user": trim_user}
         return self.post(url, params)
