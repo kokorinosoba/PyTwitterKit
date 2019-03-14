@@ -5,11 +5,13 @@ from setting import API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
 
 
 class Twitter():
-    def __init__(self):
+    def __init__(self, print_status=True, print_content=True):
         self.requests = OAuth1Session(API_KEY,
                                       API_SECRET_KEY,
                                       ACCESS_TOKEN,
                                       ACCESS_TOKEN_SECRET)
+        self.print_status = print_status
+        self.print_content = print_content
 
     def print_tweet(self, tweet):
         print(f'{tweet["user"]["name"]} @{tweet["user"]["screen_name"]} ID:{tweet["id_str"]}\n{tweet["full_text"]}')
@@ -30,13 +32,16 @@ class Twitter():
 
     def get(self, url, params):
         result = self.requests.get(url, params=params)
-        print(sys._getframe(1).f_code.co_name, result)
+        if self.print_status:
+            print(sys._getframe(1).f_code.co_name, result)
         return result
 
     def get_print(self, url, params):
         result = self.requests.get(url, params=params)
-        print(sys._getframe(1).f_code.co_name, result)
-        self.parse_tweet(result)
+        if self.print_status:
+            print(sys._getframe(1).f_code.co_name, result)
+        if self.print_content:
+            self.parse_tweet(result)
         return result
 
     def post(self, url, params):
