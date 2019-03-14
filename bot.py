@@ -31,6 +31,11 @@ class Twitter():
     def get(self, url, params):
         result = self.requests.get(url, params=params)
         print(sys._getframe(1).f_code.co_name, result)
+        return result
+
+    def get_print(self, url, params):
+        result = self.requests.get(url, params=params)
+        print(sys._getframe(1).f_code.co_name, result)
         self.parse_tweet(result)
         return result
 
@@ -64,7 +69,7 @@ class Twitter():
                   "trim_user": trim_user,
                   "exclude_replies": exclude_replies,
                   "include_entities": include_entities}
-        return self.get(url, params)
+        return self.get_print(url, params)
 
     def GET_statuses_mentions_timeline(self, count=None, since_id=None, max_id=None, trim_user=None, include_entities=None):
         url = "https://api.twitter.com/1.1/statuses/mentions_timeline.json?tweet_mode=extended"
@@ -73,7 +78,7 @@ class Twitter():
                   "max_id": max_id,
                   "trim_user": trim_user,
                   "include_entities": include_entities}
-        return self.get(url, params)
+        return self.get_print(url, params)
 
     def GET_statuses_user_timeline(self, user_id=None, screen_name=None, since_id=None, count=None, max_id=None, trim_user=None, exclude_replies=None, include_rts=None):
         url = "https://api.twitter.com/1.1/statuses/user_timeline.json?tweet_mode=extended"
@@ -85,7 +90,7 @@ class Twitter():
                   "trim_user": trim_user,
                   "exclude_replies": exclude_replies,
                   "include_rts": include_rts}
-        return self.get(url, params)
+        return self.get_print(url, params)
 
     # Post, retrieve and engage with Tweets
     def GET_favorites_list(self, user_id=None, screen_name=None, count=None, since_id=None, max_id=None, include_entities=None):
@@ -96,7 +101,7 @@ class Twitter():
                   "since_id": since_id,
                   "max_id": max_id,
                   "include_entities": include_entities}
-        return self.get(url, params)
+        return self.get_print(url, params)
 
     def GET_statuses_lookup(self, id=[], include_entities=None, trim_user=None, map=None, include_ext_alt_text=None, include_card_uri=None):
         id = ",".join(str(s) for s in id)
@@ -107,12 +112,23 @@ class Twitter():
                   "map": map,
                   "include_ext_alt_text": include_ext_alt_text,
                   "include_card_uri": include_card_uri}
-        return self.get(url, params)
+        return self.get_print(url, params)
 
-    def GET_statuses_oembed(self):
-        url = ""
-        params = {}
-        return self.get(url, params)
+    def GET_statuses_oembed(self, url, maxwidth=None, hide_media=None, hide_thread=None, omit_script=None, align=None, related=None, lang=None, theme=None, link_color=None, widget_type=None, dnt=None):
+        resource_url = "https://publish.twitter.com/oembed"
+        params = {"url": url,
+                  "maxwidth": maxwidth,
+                  "hide_media": hide_media,
+                  "hide_thread": hide_thread,
+                  "omit_script": omit_script,
+                  "align": align,
+                  "related": related,
+                  "lang": lang,
+                  "theme": theme,
+                  "link_color": link_color,
+                  "widget_type": widget_type,
+                  "dnt": dnt}
+        return self.get(resource_url, params)  # よくわかんないのが返ってくる
 
     def GET_statuses_retweeters_ids(self, id, count=None, cursor=None, stringify_ids=None):
         url = "https://api.twitter.com/1.1/statuses/retweeters/ids.json"
@@ -127,7 +143,7 @@ class Twitter():
         params = {"id": id,
                   "count": count,
                   "trim_user": trim_user}
-        return self.get(url, params)
+        return self.get_print(url, params)
 
     def GET_statuses_retweets_of_me(self, count=None, since_id=None, max_id=None, trim_user=None, include_entities=None, include_user_entities=None):
         url = "https://api.twitter.com/1.1/statuses/retweets_of_me.json?tweet_mode=extended"
@@ -137,7 +153,7 @@ class Twitter():
                   "trim_user": trim_user,
                   "include_entities": include_entities,
                   "include_user_entities": include_user_entities}
-        return self.get(url, params)
+        return self.get_print(url, params)
 
     def GET_statuses_show(self, id, trim_user=None, include_my_retweet=None, include_entities=None, include_ext_alt_text=None, include_card_uri=None):
         url = "https://api.twitter.com/1.1/statuses/show.json?tweet_mode=extended"
@@ -147,7 +163,7 @@ class Twitter():
                   "include_entities": include_entities,
                   "include_ext_alt_text": include_ext_alt_text,
                   "include_card_uri": include_card_uri}
-        return self.get(url, params)
+        return self.get_print(url, params)
 
     def POST_favorites_create(self, id, include_entities=None):
         url = "https://api.twitter.com/1.1/favorites/create.json"
@@ -213,4 +229,4 @@ class Twitter():
                   "since_id": since_id,
                   "max_id": max_id,
                   "include_entities": include_entities}
-        return self.get(url, params)
+        return self.get_print(url, params)
