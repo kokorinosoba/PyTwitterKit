@@ -11,20 +11,27 @@ class Twitter():
                                       ACCESS_TOKEN,
                                       ACCESS_TOKEN_SECRET)
 
-    def print_tweet(self, result):
+    def print_tweet(self, tweet):
+        print(f'{tweet["user"]["name"]} @{tweet["user"]["screen_name"]} ID:{tweet["id_str"]}\n{tweet["full_text"]}')
+
+    def parse_tweet(self, result):
         if result.status_code == 200:
             tweets = json.loads(result.text)
             print("-" * 60)
-            if type(tweets) == dict:
+            if type(tweets) == dict and "statuses" in tweets.keys():
                 tweets = tweets["statuses"]
-            for tweet in tweets:
-                print(f'{tweet["user"]["name"]} @{tweet["user"]["screen_name"]} ID:{tweet["id_str"]}\n{tweet["full_text"]}')
-                print("-" * 60)
+            if type(tweets) == list:
+                for tweet in tweets:
+                    self.print_tweet(tweet)
+                    print("-" * 60)
+            else:
+                tweet = tweets
+                self.print_tweet(tweet)
 
     def get(self, url, params):
         result = self.requests.get(url, params=params)
         print(sys._getframe(1).f_code.co_name, result)
-        self.print_tweet(result)
+        self.parse_tweet(result)
         return result
 
     def post(self, url, params):
@@ -140,7 +147,7 @@ class Twitter():
                   "include_entities": include_entities,
                   "include_ext_alt_text": include_ext_alt_text,
                   "include_card_uri": include_card_uri}
-        return self.get(url, params)  # 動かない
+        return self.get(url, params)
 
     def POST_favorites_create(self, id, include_entities=None):
         url = "https://api.twitter.com/1.1/favorites/create.json"
