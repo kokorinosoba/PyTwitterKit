@@ -1,5 +1,6 @@
-from requests_oauthlib import OAuth1Session
+import sys
 import json
+from requests_oauthlib import OAuth1Session
 from setting import API_KEY, API_SECRET_KEY, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
 
 
@@ -22,6 +23,7 @@ class Twitter():
 
     def get(self, url, params):
         result = self.requests.get(url, params=params)
+        print(sys._getframe(1).f_code.co_name, result)
         self.print_tweet(result)
         return result
 
@@ -42,7 +44,7 @@ class Twitter():
     # Filter realtime tweets
 
     # Get Tweet timelines
-    def GET_statuses_home_timeline(self, count=20, since_id=None, max_id=None, trim_user=None, exclude_replies=None, include_entities=None):
+    def GET_statuses_home_timeline(self, count=None, since_id=None, max_id=None, trim_user=None, exclude_replies=None, include_entities=None):
         url = "https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended"
         params = {"count": count,
                   "since_id": since_id,
@@ -50,30 +52,28 @@ class Twitter():
                   "trim_user": trim_user,
                   "exclude_replies": exclude_replies,
                   "include_entities": include_entities}
-        result = self.requests.get(url, params=params)
-        print("statuses_home_timeline", result)
-        self.print_tweet(result)
-        return result
+        return self.get(url, params)
 
-    def GET_statuses_mentions_timeline(self, count=20, since_id=None, max_id=None, trim_user=None, include_entities=None):
+    def GET_statuses_mentions_timeline(self, count=None, since_id=None, max_id=None, trim_user=None, include_entities=None):
         url = "https://api.twitter.com/1.1/statuses/mentions_timeline.json?tweet_mode=extended"
         params = {"count": count,
                   "since_id": since_id,
                   "max_id": max_id,
                   "trim_user": trim_user,
                   "include_entities": include_entities}
-        result = self.requests.get(url, params=params)
-        print("statuses_mentions_timeline", result)
-        self.print_tweet(result)
-        return result
+        return self.get(url, params)
 
-    def GET_statuses_user_timeline(self, screen_name, count=10):
+    def GET_statuses_user_timeline(self, user_id=None, screen_name=None, since_id=None, count=None, max_id=None, trim_user=None, exclude_replies=None, include_rts=None):
         url = "https://api.twitter.com/1.1/statuses/user_timeline.json?tweet_mode=extended"
-        param = {"screen_name": screen_name, "count": count}
-        result = self.requests.get(url, params=param)
-        print("statuses_user_timeline", result)
-        self.print_tweet(result)
-        return result
+        params = {"user_id": user_id,
+                  "screen_name": screen_name,
+                  "since_id": since_id,
+                  "count": count,
+                  "max_id": max_id,
+                  "trim_user": trim_user,
+                  "exclude_replies": exclude_replies,
+                  "include_rts": include_rts}
+        return self.get(url, params)
 
     # Post, retrieve and engage with Tweets
     def POST_statuses_destroy(self, id):
