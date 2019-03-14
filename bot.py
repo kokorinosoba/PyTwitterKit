@@ -113,17 +113,34 @@ class Twitter():
                   "count": count,
                   "cursor": cursor,
                   "stringify_ids": stringify_ids}
-        return self.get(url, params) # IDしか返ってこない
+        return self.get(url, params)  # IDしか返ってこない
 
-    def GET_statuses_retweets(self):
-        url = ""
-        params = {}
+    def GET_statuses_retweets(self, id, count=None, trim_user=None):
+        url = f"https://api.twitter.com/1.1/statuses/retweets/{id}.json?tweet_mode=extended"
+        params = {"id": id,
+                  "count": count,
+                  "trim_user": trim_user}
         return self.get(url, params)
 
-    def GET_statuses_show(self):
-        url = ""
-        params = {}
+    def GET_statuses_retweets_of_me(self, count=None, since_id=None, max_id=None, trim_user=None, include_entities=None, include_user_entities=None):
+        url = "https://api.twitter.com/1.1/statuses/retweets_of_me.json?tweet_mode=extended"
+        params = {"count": count,
+                  "since_id": since_id,
+                  "max_id": max_id,
+                  "trim_user": trim_user,
+                  "include_entities": include_entities,
+                  "include_user_entities": include_user_entities}
         return self.get(url, params)
+
+    def GET_statuses_show(self, id, trim_user=None, include_my_retweet=None, include_entities=None, include_ext_alt_text=None, include_card_uri=None):
+        url = "https://api.twitter.com/1.1/statuses/show.json?tweet_mode=extended"
+        params = {"id": id,
+                  "trim_user": trim_user,
+                  "include_my_retweet": include_my_retweet,
+                  "include_entities": include_entities,
+                  "include_ext_alt_text": include_ext_alt_text,
+                  "include_card_uri": include_card_uri}
+        return self.get(url, params)  # 動かない
 
     def POST_favorites_create(self, id, include_entities=None):
         url = "https://api.twitter.com/1.1/favorites/create.json"
