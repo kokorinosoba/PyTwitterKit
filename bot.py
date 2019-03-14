@@ -81,6 +81,49 @@ class Twitter():
         return self.get(url, params)
 
     # Post, retrieve and engage with Tweets
+    def GET_favorites_list(self, user_id=None, screen_name=None, count=None, since_id=None, max_id=None, include_entities=None):
+        url = "https://api.twitter.com/1.1/favorites/list.json?tweet_mode=extended"
+        params = {"user_id": user_id,
+                  "screen_name": screen_name,
+                  "count": count,
+                  "since_id": since_id,
+                  "max_id": max_id,
+                  "include_entities": include_entities}
+        return self.get(url, params)
+
+    def GET_statuses_lookup(self, id=[], include_entities=None, trim_user=None, map=None, include_ext_alt_text=None, include_card_uri=None):
+        id = ",".join(str(s) for s in id)
+        url = "https://api.twitter.com/1.1/statuses/lookup.json?tweet_mode=extended"
+        params = {"id": id,
+                  "include_entities": include_entities,
+                  "trim_user": trim_user,
+                  "map": map,
+                  "include_ext_alt_text": include_ext_alt_text,
+                  "include_card_uri": include_card_uri}
+        return self.get(url, params)
+
+    def GET_statuses_oembed(self):
+        url = ""
+        params = {}
+        return self.get(url, params)
+
+    def GET_statuses_retweeters_ids(self, id, count=None, cursor=None, stringify_ids=None):
+        url = "https://api.twitter.com/1.1/statuses/retweeters/ids.json"
+        params = {"id": id,
+                  "count": count,
+                  "cursor": cursor,
+                  "stringify_ids": stringify_ids}
+        return self.get(url, params) # IDしか返ってこない
+
+    def GET_statuses_retweets(self):
+        url = ""
+        params = {}
+        return self.get(url, params)
+
+    def GET_statuses_show(self):
+        url = ""
+        params = {}
+        return self.get(url, params)
 
     def POST_favorites_create(self, id, include_entities=None):
         url = "https://api.twitter.com/1.1/favorites/create.json"
@@ -130,6 +173,8 @@ class Twitter():
                   "fail_dmcommands": fail_dmcommands,
                   "card_uri": card_uri}
         return self.post(url, params)
+
+    # Sample realtime tweets
 
     # Search Tweets
     def GET_search_tweets(self, search_word, geocode=None, lang=None, locale=None, result_type=None, count=None, until=None, since_id=None, max_id=None, include_entities=None):
