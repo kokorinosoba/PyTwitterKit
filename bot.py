@@ -27,6 +27,11 @@ class Twitter():
         self.print_tweet(result)
         return result
 
+    def post(self, url, params):
+        result = self.requests.post(url, params=params)
+        print(sys._getframe(1).f_code.co_name, result)
+        return result
+
     # --- Accounts and users ---
     # Create and manage lists
 
@@ -76,23 +81,48 @@ class Twitter():
         return self.get(url, params)
 
     # Post, retrieve and engage with Tweets
-    def POST_statuses_destroy(self, id):
+    def POST_statuses_destroy(self, id, trim_user=None):
         url = f"https://api.twitter.com/1.1/statuses/destroy/{id}.json"
-        params = {"id": id}
-        result = self.requests.post(url, params=params)
-        print("statuses_destroy", result)
+        params = {"id": id,
+                  "trim_user": trim_user}
+        return self.post(url, params)
 
-    def POST_statuses_update(self, status):
+    def POST_statuses_retweet(self, id, trim_user=None):
+        url = f"https://api.twitter.com/1.1/statuses/retweet/{id}.json"
+        params = {"id": id,
+                  "trim_user": trim_user}
+        return self.post(url, params)
+
+    def POST_statuses_update(self, status, in_relpy_to_status_id=None, auto_populate_reply_metadata=None, exclude_reply_user_ids=None, attachment_url=None, media_ids=None, possibly_sensitive=None, lat=None, long=None, place_id=None, display_coordinates=None, trim_user=None, enable_dmcommands=None, fail_dmcommands=None, card_uri=None):
         url = "https://api.twitter.com/1.1/statuses/update.json"
-        param = {"status": status}
-        result = self.requests.post(url, params=param)
-        print("statuses_update", result)
+        params = {"status": status,
+                  "in_relpy_to_status_id": in_relpy_to_status_id,
+                  "auto_populate_reply_metadata": auto_populate_reply_metadata,
+                  "exclude_reply_user_ids": exclude_reply_user_ids,
+                  "attachment_url": attachment_url,
+                  "media_ids": media_ids,
+                  "possibly_sensitive": possibly_sensitive,
+                  "lat": lat,
+                  "long": long,
+                  "place_id": place_id,
+                  "display_coordinates": display_coordinates,
+                  "trim_user": trim_user,
+                  "enable_dmcommands": enable_dmcommands,
+                  "fail_dmcommands": fail_dmcommands,
+                  "card_uri": card_uri}
+        return self.post(url, params)
 
     # Search Tweets
-    def GET_search_tweets(self, search_word, count=10, result_type="recent"):
+    def GET_search_tweets(self, search_word, geocode=None, lang=None, locale=None, result_type=None, count=None, until=None, since_id=None, max_id=None, include_entities=None):
         url = "https://api.twitter.com/1.1/search/tweets.json?tweet_mode=extended"
-        param = {"q": search_word, "count": count, "lang": "ja", "result_type": result_type}
-        result = self.requests.get(url, params=param)
-        print("search_tweets", result)
-        self.print_tweet(result)
-        return result
+        params = {"q": search_word,
+                  "geocode": geocode,
+                  "lang": lang,
+                  "locale": locale,
+                  "result_type": result_type,
+                  "count": count,
+                  "until": until,
+                  "since_id": since_id,
+                  "max_id": max_id,
+                  "include_entities": include_entities}
+        return self.get(url, params)
