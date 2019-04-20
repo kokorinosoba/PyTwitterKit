@@ -19,7 +19,6 @@ class Twitter():
     def parse_tweet(self, result):
         if result.status_code == 200:
             tweets = json.loads(result.text)
-            print("-" * 60)
             if type(tweets) == dict and "statuses" in tweets.keys():
                 tweets = tweets["statuses"]
             if type(tweets) == list:
@@ -34,12 +33,14 @@ class Twitter():
         result = self.requests.get(url, params=params)
         if self.print_status:
             print(sys._getframe(1).f_code.co_name, result)
+            print("-" * 60)
         return result
 
     def get_print(self, url, params):
         result = self.requests.get(url, params=params)
         if self.print_status:
             print(sys._getframe(1).f_code.co_name, result)
+            print("-" * 60)
         if self.print_content:
             self.parse_tweet(result)
         return result
@@ -220,6 +221,11 @@ class Twitter():
         return self.post(url, params)
 
     # Sample realtime tweets
+    def GET_statuses_sample(self, delimited=None, stall_warnings=None):
+        url = "https://stream.twitter.com/1.1/statuses/sample.json"
+        params = {"delimited": delimited,
+                  "stall_warnings": stall_warnings}
+        return self.get_print(url, params)  # 動きが止まる
 
     # Search Tweets
     def GET_search_tweets(self, search_word, geocode=None, lang=None, locale=None, result_type=None, count=None, until=None, since_id=None, max_id=None, include_entities=None):
